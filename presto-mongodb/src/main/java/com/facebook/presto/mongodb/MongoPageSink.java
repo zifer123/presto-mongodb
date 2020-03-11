@@ -17,7 +17,6 @@ import com.facebook.presto.spi.ConnectorPageSink;
 import com.facebook.presto.spi.ConnectorSession;
 import com.facebook.presto.spi.Page;
 import com.facebook.presto.spi.PrestoException;
-import com.facebook.presto.spi.SchemaTableName;
 import com.facebook.presto.spi.StandardErrorCode;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.type.BigintType;
@@ -72,7 +71,7 @@ public class MongoPageSink
 {
     private final MongoSession mongoSession;
     private final ConnectorSession session;
-    private final SchemaTableName schemaTableName;
+    private final MongoTableHandle table;
     private final List<MongoColumnHandle> columns;
     private final String implicitPrefix;
 
@@ -80,12 +79,12 @@ public class MongoPageSink
             MongoClientConfig config,
             MongoSession mongoSession,
             ConnectorSession session,
-            SchemaTableName schemaTableName,
+             MongoTableHandle table,
             List<MongoColumnHandle> columns)
     {
         this.mongoSession = mongoSession;
         this.session = session;
-        this.schemaTableName = schemaTableName;
+        this.table = table;
         this.columns = columns;
         this.implicitPrefix = config.getImplicitRowFieldPrefix();
     }
@@ -93,7 +92,7 @@ public class MongoPageSink
     @Override
     public CompletableFuture<?> appendPage(Page page)
     {
-        MongoCollection<Document> collection = mongoSession.getCollection(schemaTableName);
+        MongoCollection<Document> collection = mongoSession.getCollection(table);
         List<Document> batch = new ArrayList<>(page.getPositionCount());
 
         for (int position = 0; position < page.getPositionCount(); position++) {
@@ -101,7 +100,7 @@ public class MongoPageSink
 
             for (int channel = 0; channel < page.getChannelCount(); channel++) {
                 MongoColumnHandle column = columns.get(channel);
-                doc.append(column.getName(), getObjectValue(columns.get(channel).getType(), page.getBlock(channel), position));
+                doc.append(column.getName(), getObjectValue(column.getType(), page.getBlock(channel), position));
             }
             batch.add(doc);
         }

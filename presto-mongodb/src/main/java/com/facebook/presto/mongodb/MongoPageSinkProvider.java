@@ -44,7 +44,7 @@ public class MongoPageSinkProvider
         checkArgument(!pageSinkProperties.isPartitionCommitRequired(), "Mongo connector does not support partition commit");
 
         MongoOutputTableHandle handle = (MongoOutputTableHandle) outputTableHandle;
-        return new MongoPageSink(config, mongoSession, session, handle.getSchemaTableName(), handle.getColumns());
+        return new MongoPageSink(config, mongoSession, session, handle.getTable(), handle.getColumns());
     }
 
     @Override
@@ -53,6 +53,6 @@ public class MongoPageSinkProvider
         checkArgument(!pageSinkProperties.isPartitionCommitRequired(), "Mongo connector does not support partition commit");
 
         MongoInsertTableHandle handle = (MongoInsertTableHandle) insertTableHandle;
-        return new MongoPageSink(config, mongoSession, session, handle.getSchemaTableName(), handle.getColumns());
+        return new MongoPageSink(config, mongoSession, session, handle.getTable(), handle.getColumns());
     }
 }

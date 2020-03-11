@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.facebook.presto.mongodb;
+/*package com.facebook.presto.mongodb;
 
 import com.google.common.collect.ImmutableList;
 
@@ -74,3 +74,4 @@ public class MongoTable
                 .toString();
     }
 }
+*/

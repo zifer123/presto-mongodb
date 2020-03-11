@@ -29,12 +29,12 @@ public class TestMongoSplit
     @Test
     public void testJsonRoundTrip()
     {
-        MongoSplit expected = new MongoSplit(new SchemaTableName("schema1", "table1"), TupleDomain.all(), ImmutableList.of());
+        MongoSplit expected = new MongoSplit(new MongoTableHandle("Schema1", "Table1"), TupleDomain.all(), ImmutableList.of());
 
         String json = codec.toJson(expected);
         MongoSplit actual = codec.fromJson(json);
 
-        assertEquals(actual.getSchemaTableName(), expected.getSchemaTableName());
+        assertEquals(actual.getTable(), expected.getTable());
         assertEquals(actual.getTupleDomain(), TupleDomain.<ColumnHandle>all());
         assertEquals(actual.getAddresses(), ImmutableList.of());
     }
